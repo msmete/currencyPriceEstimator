@@ -11,18 +11,18 @@ def create(h, w):
     model = Sequential()
 
     # Adding 1st LSTM layer
-    model.add(LSTM(units=128, return_sequences=True, input_shape=(h, w)))
+    model.add(LSTM(units=64, return_sequences=True, input_shape=(h, w)))
 
     # Adding 2nd LSTM layer
-    model.add(LSTM(units=100, return_sequences=False))
+    model.add(LSTM(units=200, return_sequences=False))
 
     # Adding Dropout
-    model.add(Dropout(0.1))
+    model.add(Dropout(0.25))
 
     # Output layer
-    model.add(Dense(units=1, activation='linear'))
-    # model.add(Dense(units=1, activation='relu'))
+    # model.add(Dense(units=1, activation='linear'))
+    model.add(Dense(units=1, activation='relu'))
 
     # Compiling the Neural Network
-    model.compile(optimizer = Adam(learning_rate=0.01), loss='mean_squared_error')
+    model.compile(optimizer = Adam(learning_rate=0.001), loss='mean_squared_error')
     return model

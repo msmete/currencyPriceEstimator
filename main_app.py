@@ -8,7 +8,7 @@ import pandas as pd
 n_past = 90
 n_future = 60
 c_index = 0
-epochs = 50
+epochs = 5
 # datelist = initializer.create_datelist()
 training_set_scaled, sc_predict, training_set, datelist = initializer.initialize(c_index)
 X_train, y_train = preprocess.train_test_split(training_set_scaled, c_index, n_past, n_future)
