@@ -4,6 +4,7 @@ from predict_util import predict
 from general_util import util
 import pandas as pd
 
+
 n_past = 90
 n_future = 60
 c_index = 5
@@ -29,9 +30,12 @@ PREDICTION_TRAIN.index = PREDICTION_TRAIN.index.to_series().apply(util.datetime_
 print(PREDICTION_TRAIN)
 # util.visualize()
 
+
+
+
 import matplotlib.pyplot as plt
-# Set plot size
 from pylab import rcParams
+
 rcParams['figure.figsize'] = 14, 5
 
 # Plot parameters
@@ -40,7 +44,7 @@ START_DATE_FOR_PLOTTING = '2020-01-01'
 plt.plot(PREDICTIONS_FUTURE.index, PREDICTIONS_FUTURE[0], color='r', label='Predicted Stock Price')
 plt.plot(PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:].index, PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:][0], color='orange', label='Training predictions')
 # plt.plot(training_set.loc[START_DATE_FOR_PLOTTING:].index, training_set.loc[START_DATE_FOR_PLOTTING:][1], color='b', label='Actual Stock Price')
-plt.plot(training_set[training_set.columns[0]], training_set[training_set.columns[c_index+1]])
+# plt.plot(training_set[training_set.columns[0]], training_set[training_set.columns[c_index+1]],  color='blue', label='Actual Stock Price')
 
 plt.axvline(x = min(PREDICTIONS_FUTURE.index), color='green', linewidth=2, linestyle='--')
 
