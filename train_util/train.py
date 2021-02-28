@@ -8,5 +8,7 @@ def train(model, X_train, y_train):
 
     tb = TensorBoard('logs')
 
-    history = model.fit(X_train, y_train, shuffle=True, epochs=8, callbacks=[es, rlr, mcp, tb], validation_split=0.2, verbose=1, batch_size=256)
+    history = model.fit(X_train, y_train, shuffle=True, epochs=10, callbacks=[mcp, tb], validation_split=0.2, verbose=1, batch_size=256)
+
+    # history = model.fit(X_train, y_train, shuffle=True, epochs=200, callbacks=[es, rlr, mcp, tb], validation_split=0.2, verbose=1, batch_size=256)
     return model, history

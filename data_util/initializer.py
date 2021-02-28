@@ -17,6 +17,7 @@ def initialize():
     dataset_train = concat(datasets)
     dataset_train = dataset_train[:: -1]
     # dataset_train = np.invert(dataset_train)
+    datelist = create_datelist()
     cols = [i for i in range(len(dataset_train[0, :]))]
 
     for i in range(0, dataset_train.shape[0]):
@@ -32,7 +33,10 @@ def initialize():
 
     sc_predict = StandardScaler()
     sc_predict.fit_transform(np.array(training_set[0]).reshape((len(training_set[0]), 1)))
-    return training_set_scaled, sc_predict
+    training_set = np.hstack((np.array(datelist).reshape((len(datelist), 1)), training_set))
+    cols = [i for i in range(len(training_set[0, :]))]
+    training_set = pd.DataFrame(data=training_set, columns=cols)  # 1st row as the column names
+    return training_set_scaled, sc_predict, training_set, datelist
 
 
 def concat(items):

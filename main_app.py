@@ -4,14 +4,15 @@ from predict_util import predict
 from general_util import util
 import pandas as pd
 
-n_past = 60
-n_future = 90
-datelist = initializer.create_datelist()
-training_set_scaled, sc_predict = initializer.initialize()
-X_train, y_train = preprocess.train_test_split(training_set_scaled)
-predictor = model.create(90, training_set_scaled.shape[1]-1)
+n_past = 90
+n_future = 60
+c_index = 5
+# datelist = initializer.create_datelist()
+training_set_scaled, sc_predict, training_set, datelist = initializer.initialize()
+X_train, y_train = preprocess.train_test_split(training_set_scaled, c_index)
+predictor = model.create(n_past, training_set_scaled.shape[1]-1)
 predictor, history = train.train(predictor, X_train, y_train )
-predictions_future, predictions_train, datelist_future = predict.predict(predictor, X_train, datelist, n_future=90, n_past=60)
+predictions_future, predictions_train, datelist_future = predict.predict(predictor, X_train, datelist, n_future=n_future, n_past=n_past)
 # Inverse the predictions to original measurements
 
 
@@ -26,25 +27,29 @@ PREDICTION_TRAIN = pd.DataFrame(y_pred_train, columns=[0]).set_index(pd.Series(d
 PREDICTION_TRAIN.index = PREDICTION_TRAIN.index.to_series().apply(util.datetime_to_timestamp)
 
 print(PREDICTION_TRAIN)
+# util.visualize()
 
-# # Set plot size
-# from pylab import rcParams
-# rcParams['figure.figsize'] = 14, 5
-# 
-# # Plot parameters
-# START_DATE_FOR_PLOTTING = '2012-06-01'
-#
-# plt.plot(PREDICTIONS_FUTURE.index, PREDICTIONS_FUTURE['Open'], color='r', label='Predicted Stock Price')
-# plt.plot(PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:].index, PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:]['Open'], color='orange', label='Training predictions')
-# plt.plot(dataset_train.loc[START_DATE_FOR_PLOTTING:].index, dataset_train.loc[START_DATE_FOR_PLOTTING:]['Open'], color='b', label='Actual Stock Price')
-#
-# plt.axvline(x = min(PREDICTIONS_FUTURE.index), color='green', linewidth=2, linestyle='--')
-#
-# plt.grid(which='major', color='#cccccc', alpha=0.5)
-#
-# plt.legend(shadow=True)
-# plt.title('Predcitions and Acutal Stock Prices', family='Arial', fontsize=12)
-# plt.xlabel('Timeline', family='Arial', fontsize=10)
-# plt.ylabel('Stock Price Value', family='Arial', fontsize=10)
-# plt.xticks(rotation=45, fontsize=8)
-# plt.show()
+import matplotlib.pyplot as plt
+# Set plot size
+from pylab import rcParams
+rcParams['figure.figsize'] = 14, 5
+
+# Plot parameters
+START_DATE_FOR_PLOTTING = '2020-01-01'
+
+plt.plot(PREDICTIONS_FUTURE.index, PREDICTIONS_FUTURE[0], color='r', label='Predicted Stock Price')
+plt.plot(PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:].index, PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:][0], color='orange', label='Training predictions')
+# plt.plot(training_set.loc[START_DATE_FOR_PLOTTING:].index, training_set.loc[START_DATE_FOR_PLOTTING:][1], color='b', label='Actual Stock Price')
+plt.plot(training_set[training_set.columns[0]], training_set[training_set.columns[c_index+1]])
+
+plt.axvline(x = min(PREDICTIONS_FUTURE.index), color='green', linewidth=2, linestyle='--')
+
+plt.grid(which='major', color='#cccccc', alpha=0.5)
+
+plt.legend(shadow=True)
+plt.title('Predcitions and Acutal Stock Prices', family='Arial', fontsize=12)
+plt.xlabel('Timeline', family='Arial', fontsize=10)
+plt.ylabel('Stock Price Value', family='Arial', fontsize=10)
+plt.xticks(rotation=45, fontsize=8)
+plt.show()
+
