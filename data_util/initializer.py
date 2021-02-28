@@ -6,14 +6,19 @@ import pandas as pd
 import datetime as dt
 
 
-def initialize():
+def initialize(c_index):
     data_bnb = parser.read_csv(os.path.join("data", "BNB_USD.csv"))
     data_btc = parser.read_csv(os.path.join("data", "BTC_USD.csv"))
     data_eth = parser.read_csv(os.path.join("data", "ETH_USD.csv"))
     # data_eur = parser.read_csv(os.path.join("data", "EUR_USD.csv"))
     # data_xau = parser.read_csv(os.path.join("data", "XAU_USD.csv"))
     # datasets = [data_bnb, data_btc, data_eth, data_eur, data_xau]
-    datasets = [data_bnb, data_btc, data_eth]
+    if c_index==1:
+        datasets = [data_btc, data_bnb, data_eth]
+    elif c_index==2:
+        datasets = [data_eth, data_bnb, data_btc]
+    else:
+        datasets = [data_bnb, data_btc, data_eth]
     dataset_train = concat(datasets)
     dataset_train = dataset_train[:: -1]
     # dataset_train = np.invert(dataset_train)
@@ -22,7 +27,8 @@ def initialize():
 
     for i in range(0, dataset_train.shape[0]):
         for j in cols :
-            dataset_train[i][j] = float_format(dataset_train[i][j].replace(',', ''))
+            # dataset_train[i][j] = float_format(dataset_train[i][j].replace(',', ''))
+            dataset_train[i][j] = float_format(dataset_train[i][j])
 
     dataset_train = dataset_train.astype(float)
     training_set = pd.DataFrame(data=dataset_train, columns = cols)  # 1st row as the column names
@@ -51,20 +57,32 @@ def clean(item):
     return item.drop(["Tarih", "Fark %"], axis=1)
 
 
+from locale import atof, setlocale, LC_NUMERIC
+
+def read_float_with_comma(num):
+    setlocale(LC_NUMERIC, 'French_Canada.1252')
+    return atof(num)  # 123.456
+
+    # if _locale_radix != '.':
+    #     num = num.replace(_locale_radix, ".")
+    # return float(num)
+
 def float_format(value):
+    if isinstance(value, float):
+        return value
     k = value.find("K")
     if k > 0:
-        return float(value[:-1]) * 10**3
+        return read_float_with_comma(value[:-1].replace(".", "")) * 10**3
     k = value.find("M")
     if k > 0:
-        return float(value[:-1]) * 10**6
+        return read_float_with_comma(value[:-1].replace(".", "")) * 10**6
     k = value.find("B")
     if k > 0:
-        return float(value[:-1]) * 10**9
+        return read_float_with_comma(value[:-1].replace(".", "")) * 10**9
     k = value.find("T")
     if k > 0:
-        return float(value[:-1]) * 10**12
-    return float(value)
+        return read_float_with_comma(value[:-1].replace(".", "")) * 10**12
+    return read_float_with_comma(value.replace(".", ""))
 
 
 def create_datelist():
