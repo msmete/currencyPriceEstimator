@@ -26,3 +26,25 @@ PREDICTION_TRAIN = pd.DataFrame(y_pred_train, columns=[0]).set_index(pd.Series(d
 PREDICTION_TRAIN.index = PREDICTION_TRAIN.index.to_series().apply(util.datetime_to_timestamp)
 
 print(PREDICTION_TRAIN)
+
+# # Set plot size
+# from pylab import rcParams
+# rcParams['figure.figsize'] = 14, 5
+# 
+# # Plot parameters
+# START_DATE_FOR_PLOTTING = '2012-06-01'
+#
+# plt.plot(PREDICTIONS_FUTURE.index, PREDICTIONS_FUTURE['Open'], color='r', label='Predicted Stock Price')
+# plt.plot(PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:].index, PREDICTION_TRAIN.loc[START_DATE_FOR_PLOTTING:]['Open'], color='orange', label='Training predictions')
+# plt.plot(dataset_train.loc[START_DATE_FOR_PLOTTING:].index, dataset_train.loc[START_DATE_FOR_PLOTTING:]['Open'], color='b', label='Actual Stock Price')
+#
+# plt.axvline(x = min(PREDICTIONS_FUTURE.index), color='green', linewidth=2, linestyle='--')
+#
+# plt.grid(which='major', color='#cccccc', alpha=0.5)
+#
+# plt.legend(shadow=True)
+# plt.title('Predcitions and Acutal Stock Prices', family='Arial', fontsize=12)
+# plt.xlabel('Timeline', family='Arial', fontsize=10)
+# plt.ylabel('Stock Price Value', family='Arial', fontsize=10)
+# plt.xticks(rotation=45, fontsize=8)
+# plt.show()
